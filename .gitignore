@@ -1,0 +1,6 @@
+.secrets.ts
+package-lock.json
+artifacts
+cache
+.DS_Store
+node_modules

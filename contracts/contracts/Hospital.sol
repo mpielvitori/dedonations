@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract CampaignDonacion {
+contract Hospital {
     address public owner;
     uint256 public montoObjetivo;
     uint256 public montoEtapa1;
@@ -24,7 +24,7 @@ contract CampaignDonacion {
     event EtapaCompletada(string etapa, address beneficiario, uint256 monto);
 
     modifier soloPropietario() {
-        require(msg.sender == owner, "Solo el propietario puede realizar esta operación");
+        require(msg.sender == owner, "Solo el propietario puede realizar esta operacion");
         _;
     }
 
@@ -32,7 +32,7 @@ contract CampaignDonacion {
         if (keccak256(abi.encodePacked(etapa)) == keccak256(abi.encodePacked("Etapa1"))) {
             require(!etapa1Completada, "La Etapa1 ya ha sido completada");
         } else if (keccak256(abi.encodePacked(etapa)) == keccak256(abi.encodePacked("Etapa2"))) {
-            require(etapa1Completada && !etapa2Completada, "La Etapa2 no está habilitada");
+            require(etapa1Completada && !etapa2Completada, "La Etapa2 no esta habilitada");
         }
         _;
     }
@@ -65,19 +65,19 @@ contract CampaignDonacion {
     }
 
     function donar() public payable etapaNoCompletada("Etapa1") etapaNoCompletada("Etapa2") {
-        require(msg.value > 0, "La donación debe ser mayor que cero");
+        require(msg.value > 0, "La donacion debe ser mayor que cero");
 
         donaciones[msg.sender] += msg.value;
         montoTotal += msg.value;
 
         emit DonacionRecibida(msg.sender, msg.value);
 
-        // Verificar si se completó la Etapa1
+        // Verificar si se completo la Etapa1
         if (montoTotal >= montoEtapa1) {
             completarEtapa("Etapa1", beneficiario1, montoEtapa1);
         }
 
-        // Verificar si se completó la Etapa2
+        // Verificar si se completo la Etapa2
         if (etapa1Completada && montoTotal >= montoEtapa2) {
             completarEtapa("Etapa2", beneficiario2, montoEtapa2);
         }
@@ -91,13 +91,13 @@ contract CampaignDonacion {
         if (keccak256(abi.encodePacked(etapa)) == keccak256(abi.encodePacked("Etapa1"))) {
             require(
                 firmasValidas(walletAutorizante1, walletAutorizante2),
-                "Se requieren firmas válidas para completar la Etapa1"
+                "Se requieren firmas validas para completar la Etapa1"
             );
             etapa1Completada = true;
         } else if (keccak256(abi.encodePacked(etapa)) == keccak256(abi.encodePacked("Etapa2"))) {
             require(
                 firmasValidas(walletAutorizante3, walletAutorizante4),
-                "Se requieren firmas válidas para completar la Etapa2"
+                "Se requieren firmas validas para completar la Etapa2"
             );
             etapa2Completada = true;
         }
